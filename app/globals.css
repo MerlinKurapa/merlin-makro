@@ -1,0 +1,436 @@
+@import "tailwindcss";
+
+/* =========================
+   ROOT
+========================= */
+:root {
+  --background: #000000;
+  --foreground: #ffffff;
+}
+
+body {
+  background: #000;
+  color: #fff;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* =========================
+   🔥 STRIPE MESH BACKGROUND (GERÇEK RENK AKIŞI)
+========================= */
+.mesh-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+
+/* ANA KATMAN */
+.mesh-bg::before,
+.mesh-bg::after {
+  content: "";
+  position: absolute;
+  width: 160%;
+  height: 160%;
+  filter: blur(220px);
+  opacity: 0.35;
+
+transform: none !important;
+
+  /* 🔥 GENİŞ RENK PALETİ */
+background: linear-gradient(
+  120deg,
+  #020617,   /* koyu gece */
+  #030c1a,   /* derin gece */
+  #001f3f,   /* senin eski ton */
+  #003566,
+  #0055cc,
+  #0077b6,
+  #00aaff,
+  #0077b6,
+  #003566,
+  #001f3f,
+  #030c1a,
+  #020617
+);
+
+  background-size: 800% 800%;
+
+  animation:
+    meshColor 60s linear infinite;
+}
+
+/* ikinci layer */
+.mesh-bg::after {
+  opacity: 0.55;
+  animation-delay: -8s, -4s;
+}
+
+
+/* 🔥 HAREKET */
+@keyframes meshMove {
+  0% { transform: none; }
+  100% { transform: none; }
+}
+
+
+/* 🔥 RENK AKIŞI (ASIL FIX) */
+@keyframes meshColor {
+  0% { background-position: 0% 50%; }
+  20% { background-position: 100% 50%; }
+  40% { background-position: 50% 100%; }
+  60% { background-position: 50% 0%; }
+  80% { background-position: 100% 100%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* =========================
+   RGB BACKGROUND (fallback)
+========================= */
+.rgb-bg {
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden;
+
+  background: linear-gradient(
+    -45deg,
+    #020024,
+    #001f3f,
+    #003366,
+    #1a0033,
+    #330000,
+    #332200,
+    #002211,
+    #001a33
+  );
+  background-size: 600% 600%;
+  animation: rgbFlow 25s ease infinite;
+}
+
+@keyframes rgbFlow {
+  0% { background-position: 0% 50% }
+  25% { background-position: 50% 100% }
+  50% { background-position: 100% 50% }
+  75% { background-position: 50% 0% }
+  100% { background-position: 0% 50% }
+}
+
+/* =========================
+   RGB SWORD (SENKRON)
+========================= */
+.rgb-sword {
+  background: linear-gradient(
+    -45deg,
+    #00eaff,
+    #0099ff,
+    #003366,
+    #00ffcc,
+    #00eaff
+  );
+  background-size: 600% 600%;
+  animation: meshColor 22s linear infinite;
+}
+
+/* =========================
+   ❄️ KAR TANESİ
+========================= */
+.rgb-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+
+  background-image: radial-gradient(white 1px, transparent 1px);
+  background-size: 40px 40px;
+
+  opacity: 0.08;
+  animation: snowMove 20s linear infinite;
+
+  z-index: 0;
+}
+
+@keyframes snowMove {
+  0% { transform: translateY(-100px); }
+  100% { transform: translateY(100vh); }
+}
+
+/* =========================
+   ❄️ DASHBOARD ICON
+========================= */
+.snow-icon {
+  display: inline-block;
+  color: #00eaff;
+  font-size: 18px;
+
+  animation: snowFloat 3s ease-in-out infinite;
+
+  text-shadow: 
+    0 0 6px #00eaffaa,
+    0 0 12px #00eaff66;
+}
+
+@keyframes snowFloat {
+  0% { transform: translateY(0px) rotate(0deg); }
+  25% { transform: translateY(-3px) rotate(10deg); }
+  50% { transform: translateY(2px) rotate(-10deg); }
+  75% { transform: translateY(-2px) rotate(6deg); }
+  100% { transform: translateY(0px) rotate(0deg); }
+}
+
+/* =========================
+   INPUT
+========================= */
+.input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 12px;
+  border-radius: 10px;
+  background: #000;
+  border: 1px solid #333;
+  color: white;
+  outline: none;
+  transition: 0.2s;
+}
+
+.input:focus {
+  border-color: #00eaff;
+  box-shadow: 0 0 8px #00eaff44;
+}
+
+/* =========================
+   🔥 MODERN BUTTON
+========================= */
+.button-modern {
+  position: relative;
+  padding: 12px 28px;
+  border-radius: 12px;
+  font-weight: 600;
+  color: white;
+  cursor: pointer;
+  overflow: hidden;
+
+  background: linear-gradient(
+    120deg,
+    rgba(0, 170, 255, 0.9),
+    rgba(0, 234, 255, 0.7)
+  );
+
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.2);
+
+  box-shadow:
+    0 0 15px rgba(0, 234, 255, 0.4),
+    0 6px 25px rgba(0,0,0,0.5);
+
+  transition: all 0.25s ease;
+}
+
+.button-modern:hover {
+  transform: translateY(-2px) scale(1.05);
+
+  box-shadow:
+    0 0 25px rgba(0, 234, 255, 0.8),
+    0 10px 40px rgba(0,0,0,0.7);
+}
+
+.button-modern::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(255,255,255,0.5),
+    transparent
+  );
+  transform: translateX(-100%);
+  transition: 0.6s;
+}
+
+.button-modern:hover::after {
+  transform: translateX(100%);
+}
+
+/* =========================
+   SECONDARY BUTTON
+========================= */
+.button-outline {
+  padding: 12px 28px;
+  border-radius: 12px;
+  color: white;
+  font-weight: 500;
+
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.05);
+
+  backdrop-filter: blur(10px);
+
+  transition: all 0.25s ease;
+}
+
+.button-outline:hover {
+  background: rgba(255,255,255,0.1);
+  border-color: rgba(0, 234, 255, 0.6);
+
+  box-shadow:
+    0 0 15px rgba(0,234,255,0.5);
+}
+
+/* =========================
+   🔥 KUYRUKLU BORDER
+========================= */
+.snake-card {
+  position: relative;
+  border-radius: 20px;
+  padding: 2px;
+}
+
+.snake-card::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: 20px;
+
+
+background: linear-gradient(
+  120deg,
+  #001f3f,
+  #003366,
+  #0066ff,
+  #00eaff,
+  #003366
+);
+
+  background-size: 200% 100%;
+  animation: snakeMove 2.5s linear infinite;
+
+  z-index: 0;
+
+  padding: 2px;
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+
+  pointer-events: none;
+}
+
+@keyframes snakeMove {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* =========================
+   CARD
+========================= */
+.snake-inner {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(12px);
+
+  border-radius: 18px;
+  padding: 30px;
+
+  position: relative;
+  z-index: 1;
+
+  border: 1px solid rgba(255,255,255,0.08);
+
+  box-shadow:
+    0 10px 40px rgba(0,0,0,0.7);
+}
+
+/* =========================
+   TOAST
+========================= */
+.toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 14px 20px;
+  border-radius: 10px;
+  font-size: 14px;
+  animation: slideIn 0.4s ease;
+  z-index: 9999;
+}
+
+.toast.success {
+  background: rgba(0, 255, 150, 0.1);
+  border: 1px solid #00ff99;
+  color: #00ff99;
+}
+
+.toast.error {
+  background: rgba(255, 0, 0, 0.1);
+  border: 1px solid #ff4d4d;
+  color: #ff4d4d;
+}
+
+@keyframes slideIn {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+/* =========================
+   BG ANIMATION
+========================= */
+.bg-animate {
+  animation: bgMove 20s ease-in-out infinite;
+  will-change: transform;
+}
+
+@keyframes bgMove {
+  0% { transform: scale(1) translateY(0px); }
+  50% { transform: scale(1.05) translateY(-10px); }
+  100% { transform: scale(1) translateY(0px); }
+}
+
+/* =========================
+   ✨ SADECE EKLENEN (SHINE)
+========================= */
+@keyframes shine {
+  0% { left: -20%; }
+  100% { left: 120%; }
+}
+
+.shine-effect {
+  position: absolute;
+  top: 0;
+  left: -20%;
+  width: 20%;
+  height: 100%;
+  background: linear-gradient(to right, transparent, rgba(255,255,255,0.6), transparent);
+  animation: shine 2.5s linear infinite;
+}
+
+/* =========================
+   ✨ TEXT SHINE EFFECT
+========================= */
+.text-shine {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+}
+
+.text-shine::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -40%;
+  width: 25%;
+  height: 100%;
+
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(255,255,255,0.18),
+    transparent
+  );
+
+  transform: skewX(-20deg);
+  animation: textShine 6s linear infinite;
+}
+
+@keyframes textShine {
+  0% { left: -50%; }
+  100% { left: 150%; }
+}
