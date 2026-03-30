@@ -55,7 +55,7 @@ export default function Dashboard() {
     }
 
     showToast("✔ İndirme başlatıldı", "success");
-    window.location.href = "/merlin-setup.exe";
+    window.location.href = "https://drive.google.com/uc?export=download&id=1PF_8_pIha8QcQX-hbgVBw9cDsEYJRUNL";
   };
 
   const handleCheckout = async () => {
