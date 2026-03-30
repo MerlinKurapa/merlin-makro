@@ -11,12 +11,16 @@ const ReCAPTCHA = dynamic(
   { ssr: false }
 );
 
+// 🔥 HARDCODED (ENV YOK ARTIK)
+const SUPABASE_URL = "https://qlmphykuggjqhcznbwgq.supabase.co";
+const SUPABASE_KEY = "sb_publishable_OBu1w6AOE67N84ryTy0O6g_1SlsV21N";
+
+const RECAPTCHA_KEY = "6LfHGJssAAAAAC2c28qrGShwZMk378jaHFNG787S";
+
 export default function Login() {
   const router = useRouter();
 
-
   const [supabase, setSupabase] = useState<any>(null);
-
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -30,25 +34,7 @@ export default function Login() {
   };
 
   useEffect(() => {
-    // 🔥 DEBUG (çok önemli)
-    console.log("SUPABASE URL:", process.env.NEXT_PUBLIC_SUPABASE_URL);
-    console.log("SUPABASE KEY:", process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
-    console.log("RECAPTCHA:", process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY);
-
-    // 🔥 ENV YOKSA PATLATMA → GÜVENLİ KUR
-    if (
-      !process.env.NEXT_PUBLIC_SUPABASE_URL ||
-      !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-    ) {
-      console.error("ENV YOK AMK 🚨");
-      return;
-    }
-
-    const supabaseClient = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-    );
-
+    const supabaseClient = createClient(SUPABASE_URL, SUPABASE_KEY);
     setSupabase(supabaseClient);
 
     const error = localStorage.getItem("admin_error");
@@ -70,8 +56,6 @@ export default function Login() {
     }
 
     setLoading(true);
-
-    showToast("Giriş yapılıyor...", "success");
 
     const { error } = await supabase.auth.signInWithPassword({
       email,
@@ -138,18 +122,12 @@ export default function Login() {
               onChange={(e) => setPassword(e.target.value)}
             />
 
-            {/* 🔥 CAPTCHA SAFE */}
+            {/* 🔥 CAPTCHA */}
             <div className="my-4 flex justify-center">
-              {process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY ? (
-                <ReCAPTCHA
-                  sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
-                  onChange={(val) => setCaptcha(val)}
-                />
-              ) : (
-                <p className="text-red-400 text-sm">
-                  Captcha yüklenemedi (env yok)
-                </p>
-              )}
+              <ReCAPTCHA
+                sitekey={RECAPTCHA_KEY}
+                onChange={(val) => setCaptcha(val)}
+              />
             </div>
 
             <button
