@@ -5,23 +5,20 @@ import dynamic from "next/dynamic";
 import { createClient } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
 
-// 🔥 SSR FIX
 const ReCAPTCHA = dynamic(
   () => import("react-google-recaptcha"),
   { ssr: false }
 );
 
-// 🔥 HARDCODE (ENV SORUNU YOK)
 const SUPABASE_URL = "https://qlmphykuggjqhcznbwgq.supabase.co";
 const SUPABASE_KEY = "sb_publishable_OBu1w6AOE67N84ryTy0O6g_1SlsV21N";
-
-// 🔥 BURAYA SENİN KEY
 const RECAPTCHA_KEY = "6LfHGJssAAAAAC2c28qrGShwZMk378jaHFNG787S";
 
 export default function Login() {
   const router = useRouter();
 
   const [supabase, setSupabase] = useState<any>(null);
+  const [mounted, setMounted] = useState(false); // 🔥 KRİTİK
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -37,6 +34,8 @@ export default function Login() {
   useEffect(() => {
     const supabaseClient = createClient(SUPABASE_URL, SUPABASE_KEY);
     setSupabase(supabaseClient);
+
+    setMounted(true); // 🔥 captcha için
 
     const error = localStorage.getItem("admin_error");
     if (error) {
@@ -125,12 +124,14 @@ export default function Login() {
               onChange={(e) => setPassword(e.target.value)}
             />
 
-            {/* 🔥 CAPTCHA ARTIK HER ZAMAN GÖZÜKÜR */}
+            {/* 🔥 BURASI FIX */}
             <div className="my-4 flex justify-center">
-              <ReCAPTCHA
-                sitekey={RECAPTCHA_KEY}
-                onChange={(val) => setCaptcha(val)}
-              />
+              {mounted && (
+                <ReCAPTCHA
+                  sitekey={RECAPTCHA_KEY}
+                  onChange={(val) => setCaptcha(val)}
+                />
+              )}
             </div>
 
             <button
