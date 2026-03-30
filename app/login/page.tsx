@@ -5,11 +5,13 @@ import dynamic from "next/dynamic";
 import { createClient } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
 
+// ✅ SSR FIX
 const ReCAPTCHA = dynamic(
   () => import("react-google-recaptcha"),
   { ssr: false }
 );
 
+// ✅ HARDCODE (ENV SORUNUNU KÖKTEN KESİYORUZ)
 const SUPABASE_URL = "https://qlmphykuggjqhcznbwgq.supabase.co";
 const SUPABASE_KEY = "sb_publishable_OBu1w6AOE67N84ryTy0O6g_1SlsV21N";
 const RECAPTCHA_KEY = "6LfHGJssAAAAAC2c28qrGShwZMk378jaHFNG787S";
@@ -31,11 +33,12 @@ export default function Login() {
     setTimeout(() => setToast(null), 4000);
   };
 
+  // 🔥 SUPABASE + ADMIN ERROR + MOUNT
   useEffect(() => {
     const supabaseClient = createClient(SUPABASE_URL, SUPABASE_KEY);
     setSupabase(supabaseClient);
 
-    setMounted(true); // 🔥 captcha için
+    setMounted(true); // 🔥 captcha için şart
 
     const error = localStorage.getItem("admin_error");
     if (error) {
@@ -77,26 +80,35 @@ export default function Login() {
   return (
     <div className="rgb-bg min-h-screen flex items-center justify-center relative overflow-hidden">
 
+      {/* BG */}
       <div className="mesh-bg"></div>
       <div className="absolute inset-0 bg-black/30"></div>
 
+      {/* ANA SAYFA */}
       <div className="absolute top-5 left-5 z-50">
-        <button onClick={() => router.push("/")} className="button-outline">
+        <button
+          onClick={() => router.push("/")}
+          className="button-outline"
+        >
           ← Ana Sayfa
         </button>
       </div>
 
+      {/* TOAST */}
       {toast && (
-        <div className={`fixed right-5 top-24 z-50 px-6 py-4 rounded-xl border backdrop-blur-xl shadow-xl animate-slideIn flex items-center gap-3 ${
-          toast.type === "success"
-            ? "bg-green-500/10 border-green-400 text-green-300"
-            : "bg-red-500/10 border-red-400 text-red-300"
-        }`}>
+        <div
+          className={`fixed right-5 top-24 z-50 px-6 py-4 rounded-xl border backdrop-blur-xl shadow-xl animate-slideIn flex items-center gap-3 ${
+            toast.type === "success"
+              ? "bg-green-500/10 border-green-400 text-green-300"
+              : "bg-red-500/10 border-red-400 text-red-300"
+          }`}
+        >
           <span>{toast.type === "success" ? "✔" : "⚠"}</span>
           <span>{toast.msg}</span>
         </div>
       )}
 
+      {/* CARD */}
       <div className="snake-card w-[380px] z-10">
         <div className="snake-inner text-center">
 
@@ -124,7 +136,7 @@ export default function Login() {
               onChange={(e) => setPassword(e.target.value)}
             />
 
-            {/* 🔥 BURASI FIX */}
+            {/* 🔥 CAPTCHA FIX */}
             <div className="my-4 flex justify-center">
               {mounted && (
                 <ReCAPTCHA
@@ -144,6 +156,7 @@ export default function Login() {
 
           </form>
 
+          {/* ALT */}
           <div className="mt-6 space-y-3">
 
             <label className="flex items-center gap-2 text-sm text-gray-400">
