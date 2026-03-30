@@ -5,13 +5,10 @@ import ReCAPTCHA from "react-google-recaptcha";
 import { createClient } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
-
 export default function Login() {
   const router = useRouter();
+
+  const [supabase, setSupabase] = useState<any>(null);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -24,8 +21,15 @@ export default function Login() {
     setTimeout(() => setToast(null), 4000);
   };
 
-  // 🔥 ADMIN ERROR
+  // 🔥 SUPABASE INIT + ADMIN ERROR
   useEffect(() => {
+    const supabaseClient = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    );
+
+    setSupabase(supabaseClient);
+
     const error = localStorage.getItem("admin_error");
     if (error) {
       showToast(error, "error");
@@ -34,7 +38,7 @@ export default function Login() {
   }, []);
 
   const handleLogin = async () => {
-    if (loading) return;
+    if (loading || !supabase) return;
 
     if (!email || !password) {
       return showToast("Tüm alanları doldur", "error");
@@ -70,13 +74,13 @@ export default function Login() {
       <div className="mesh-bg"></div>
       <div className="absolute inset-0 bg-black/30"></div>
 
-      {/* 🔥 ANA SAYFA BUTONU */}
+      {/* ANA SAYFA */}
       <div className="absolute top-5 left-5 z-50">
         <button
           onClick={() => router.push("/")}
           className="button-outline"
         >
-         ← Ana Sayfa
+          ← Ana Sayfa
         </button>
       </div>
 
@@ -139,7 +143,6 @@ export default function Login() {
 
           </form>
 
-          {/* ALT */}
           <div className="mt-6 space-y-3">
 
             <label className="flex items-center gap-2 text-sm text-gray-400">
