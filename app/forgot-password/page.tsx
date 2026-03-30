@@ -4,6 +4,10 @@ import { useState, useEffect } from "react";
 import { createClient } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
 
+// 🔥 HARDCODED (ENV YOK)
+const SUPABASE_URL = "https://qlmphykuggjqhcznbwgq.supabase.co";
+const SUPABASE_KEY = "sb_publishable_OBu1w6AOE67N84ryTy0O6g_1SlsV21N";
+
 export default function ForgotPassword() {
   const router = useRouter();
 
@@ -18,13 +22,8 @@ export default function ForgotPassword() {
     setTimeout(() => setToast(null), 4000);
   };
 
-  // 🔥 SUPABASE CLIENT (FIX)
   useEffect(() => {
-    const supabaseClient = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-    );
-
+    const supabaseClient = createClient(SUPABASE_URL, SUPABASE_KEY);
     setSupabase(supabaseClient);
   }, []);
 
@@ -51,18 +50,19 @@ export default function ForgotPassword() {
   return (
     <div className="rgb-bg min-h-screen flex items-center justify-center relative overflow-hidden">
 
-      {/* BG */}
       <div className="mesh-bg"></div>
       <div className="absolute inset-0 bg-black/30"></div>
 
-      {/* TOAST */}
       {toast && (
-        <div className={`toast ${toast.type}`}>
+        <div className={`fixed right-5 top-24 z-50 px-6 py-4 rounded-xl ${
+          toast.type === "success"
+            ? "bg-green-500/10 text-green-300"
+            : "bg-red-500/10 text-red-300"
+        }`}>
           {toast.msg}
         </div>
       )}
 
-      {/* HOME BUTTON */}
       <div className="absolute top-5 left-5 z-50">
         <button
           onClick={() => router.push("/")}
@@ -72,7 +72,6 @@ export default function ForgotPassword() {
         </button>
       </div>
 
-      {/* CARD */}
       <div className="snake-card w-[380px] z-10">
         <div className="snake-inner text-center">
 
