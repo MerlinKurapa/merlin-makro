@@ -4,10 +4,6 @@ import { useEffect, useState } from "react";
 import { createClient } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
 
-// 🔥 ENV PROBLEMİ FIX (HARDCODED)
-const SUPABASE_URL = "https://qlmphykuggjqhcznbwgq.supabase.co";
-const SUPABASE_KEY = "sb_publishable_OBu1w6AOE67N84ryTy0O6g_1SlsV21N";
-
 export default function Dashboard() {
   const router = useRouter();
 
@@ -24,7 +20,11 @@ export default function Dashboard() {
   };
 
   useEffect(() => {
-    const supabaseClient = createClient(SUPABASE_URL, SUPABASE_KEY);
+    const supabaseClient = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    );
+
     setSupabase(supabaseClient);
 
     const getUser = async () => {
@@ -86,12 +86,12 @@ export default function Dashboard() {
 
     setLoggingOut(true);
 
-    showToast("Çıkış yapılıyor lütfen 3 Saniye bekleyin...", "success");
+    showToast("Çıkış yapılıyor, lütfen 3 saniye bekleyin...", "success");
 
     setTimeout(async () => {
       await supabase.auth.signOut();
       router.replace("/");
-    }, 2000);
+    }, 3000);
   };
 
   if (!user) return null;
@@ -155,16 +155,19 @@ export default function Dashboard() {
         {/* HOŞGELDİN */}
         <div className="snake-card w-[420px] mb-6">
           <div className="snake-inner text-center">
-            <h1 className="font-bold text-lg">
-              Hoşgeldin {user.email}
+
+            {/* ✅ SADECE BURAYA EKLENDİ */}
+            <h1 className="font-bold text-lg flex items-center justify-center gap-2">
+              <span className="snow-icon">❄</span>
+              <span>Hoşgeldin {user.email}</span>
             </h1>
+
           </div>
         </div>
 
         {/* DOWNLOAD */}
         <div className="snake-card w-[420px] mb-6">
           <div className="snake-inner text-center">
-
             <h2 className="font-bold mb-2">Merlin Makro</h2>
 
             <button
@@ -177,68 +180,8 @@ export default function Dashboard() {
             >
               {license === "pro" ? "⬇ İndir" : "🔒 PRO Gerekli"}
             </button>
-
           </div>
         </div>
-
-        {/* STATUS */}
-        <div className="flex gap-4">
-
-          <div className="snake-card w-[200px]">
-            <div className="snake-inner text-center">
-              <p className="text-gray-400">Durum</p>
-              <p className="text-green-400 font-bold">Aktif</p>
-            </div>
-          </div>
-
-          <div className="snake-card w-[200px]">
-            <div className="snake-inner text-center">
-              <p className="text-gray-400">Lisans</p>
-              <p
-                className={`font-bold ${
-                  license === "pro"
-                    ? "text-yellow-400 animate-pulse"
-                    : "text-blue-400"
-                }`}
-              >
-                {license}
-              </p>
-            </div>
-          </div>
-
-        </div>
-
-        {/* EXTRA */}
-        <div className="snake-card w-[420px] mt-6">
-          <div className="snake-inner text-center">
-
-            <p className="text-gray-400 text-sm">Hesap Durumu</p>
-
-            <p className="font-bold text-lg">
-              {license === "pro" ? "👑 PRO Üye" : "Free Kullanıcı"}
-            </p>
-
-          </div>
-        </div>
-
-        {/* PAYMENT */}
-        {license !== "pro" && (
-          <div className="snake-card w-[420px] mt-6">
-            <div className="snake-inner text-center">
-
-              <button
-                className="button-modern w-full text-lg flex items-center justify-center gap-2"
-                onClick={handleCheckout}
-                disabled={loading}
-              >
-                {loading
-                  ? "Yönlendiriliyor..."
-                  : "💳 PRO Satın Al"}
-              </button>
-
-            </div>
-          </div>
-        )}
 
       </div>
     </div>
