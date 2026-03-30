@@ -5,7 +5,7 @@ import dynamic from "next/dynamic";
 import { createClient } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
 
-// 🔥 SADECE BU DEĞİŞTİ
+// 🔥 SSR OFF
 const ReCAPTCHA = dynamic(
   () => import("react-google-recaptcha"),
   { ssr: false }
@@ -55,7 +55,7 @@ export default function Login() {
 
     setLoading(true);
 
-    showToast("Giriş yapılıyor, lütfen 5 saniye bekleyin...", "success");
+    showToast("Giriş yapılıyor, lütfen bekleyin...", "success");
 
     setTimeout(async () => {
       const { error } = await supabase.auth.signInWithPassword({
@@ -69,7 +69,7 @@ export default function Login() {
       }
 
       router.push("/dashboard");
-    }, 5000);
+    }, 2000);
   };
 
   return (
@@ -78,14 +78,16 @@ export default function Login() {
       <div className="mesh-bg"></div>
       <div className="absolute inset-0 bg-black/30"></div>
 
+      {/* ANA SAYFA */}
       <div className="absolute top-5 left-5 z-50">
         <button onClick={() => router.push("/")} className="button-outline">
           ← Ana Sayfa
         </button>
       </div>
 
+      {/* TOAST */}
       {toast && (
-        <div className={`fixed right-5 top-24 z-50 px-6 py-4 rounded-xl border backdrop-blur-xl shadow-xl animate-slideIn flex items-center gap-3 ${
+        <div className={`fixed right-5 top-24 z-50 px-6 py-4 rounded-xl border backdrop-blur-xl shadow-xl flex items-center gap-3 ${
           toast.type === "success"
             ? "bg-green-500/10 border-green-400 text-green-300"
             : "bg-red-500/10 border-red-400 text-red-300"
@@ -122,11 +124,18 @@ export default function Login() {
               onChange={(e) => setPassword(e.target.value)}
             />
 
+            {/* ✅ FIXED CAPTCHA */}
             <div className="my-4 flex justify-center">
-              <ReCAPTCHA
-                sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!}
-                onChange={(val) => setCaptcha(val)}
-              />
+              {process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY ? (
+                <ReCAPTCHA
+                  sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
+                  onChange={(val) => setCaptcha(val)}
+                />
+              ) : (
+                <p className="text-red-400 text-sm">
+                  Captcha yüklenemedi
+                </p>
+              )}
             </div>
 
             <button
@@ -139,6 +148,7 @@ export default function Login() {
 
           </form>
 
+          {/* ALT */}
           <div className="mt-6 space-y-3">
 
             <label className="flex items-center gap-2 text-sm text-gray-400">
