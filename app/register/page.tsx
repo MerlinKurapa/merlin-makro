@@ -5,13 +5,10 @@ import ReCAPTCHA from "react-google-recaptcha";
 import { createClient } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
-
 export default function Register() {
   const router = useRouter();
+
+  const [supabase, setSupabase] = useState<any>(null);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -24,8 +21,15 @@ export default function Register() {
     setTimeout(() => setToast(null), 4000);
   };
 
-  // 🔥 ADMIN ERROR YAKALAMA
+  // 🔥 SUPABASE INIT + ADMIN ERROR
   useEffect(() => {
+    const supabaseClient = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    );
+
+    setSupabase(supabaseClient);
+
     const error = localStorage.getItem("admin_error");
 
     if (error) {
@@ -35,6 +39,8 @@ export default function Register() {
   }, []);
 
   const handleRegister = async () => {
+    if (!supabase) return;
+
     if (!email || !password || !password2) {
       return showToast("Tüm alanları doldur", "error");
     }
@@ -66,13 +72,11 @@ export default function Register() {
   return (
     <div className="rgb-bg min-h-screen flex items-center justify-center relative overflow-hidden">
 
-      {/* 🔥 MESH */}
+      {/* BG */}
       <div className="mesh-bg"></div>
-
-      {/* KARARTMA */}
       <div className="absolute inset-0 bg-black/30"></div>
 
-      {/* 🔥 ANA SAYFA BUTONU */}
+      {/* ANA SAYFA */}
       <div className="absolute top-5 left-5 z-50">
         <button
           onClick={() => router.push("/")}
@@ -82,7 +86,7 @@ export default function Register() {
         </button>
       </div>
 
-      {/* 🔥 TOAST */}
+      {/* TOAST */}
       {toast && (
         <div
           className={`fixed right-5 top-20 z-50 px-6 py-4 rounded-xl border backdrop-blur-xl shadow-2xl animate-slideIn flex items-center gap-3 ${
