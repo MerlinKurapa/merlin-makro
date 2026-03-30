@@ -28,9 +28,23 @@ export default function Login() {
   };
 
   useEffect(() => {
+    // 🔥 DEBUG (çok önemli)
+    console.log("SUPABASE URL:", process.env.NEXT_PUBLIC_SUPABASE_URL);
+    console.log("SUPABASE KEY:", process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
+    console.log("RECAPTCHA:", process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY);
+
+    // 🔥 ENV YOKSA PATLATMA → GÜVENLİ KUR
+    if (
+      !process.env.NEXT_PUBLIC_SUPABASE_URL ||
+      !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+    ) {
+      console.error("ENV YOK AMK 🚨");
+      return;
+    }
+
     const supabaseClient = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+      process.env.NEXT_PUBLIC_SUPABASE_URL,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
     );
 
     setSupabase(supabaseClient);
@@ -55,21 +69,19 @@ export default function Login() {
 
     setLoading(true);
 
-    showToast("Giriş yapılıyor, lütfen bekleyin...", "success");
+    showToast("Giriş yapılıyor...", "success");
 
-    setTimeout(async () => {
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
 
-      if (error) {
-        setLoading(false);
-        return showToast("E-posta veya şifre hatalı", "error");
-      }
+    if (error) {
+      setLoading(false);
+      return showToast("E-posta veya şifre hatalı", "error");
+    }
 
-      router.push("/dashboard");
-    }, 2000);
+    router.push("/dashboard");
   };
 
   return (
@@ -124,7 +136,7 @@ export default function Login() {
               onChange={(e) => setPassword(e.target.value)}
             />
 
-            {/* ✅ FIXED CAPTCHA */}
+            {/* 🔥 CAPTCHA SAFE */}
             <div className="my-4 flex justify-center">
               {process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY ? (
                 <ReCAPTCHA
@@ -133,7 +145,7 @@ export default function Login() {
                 />
               ) : (
                 <p className="text-red-400 text-sm">
-                  Captcha yüklenemedi
+                  Captcha yüklenemedi (env yok)
                 </p>
               )}
             </div>
