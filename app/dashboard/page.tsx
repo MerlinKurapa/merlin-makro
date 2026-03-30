@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { createClient } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
 
-// 🔥 HARDCODED (ENV YOK)
+// 🔥 ENV PROBLEMİ FIX (HARDCODED)
 const SUPABASE_URL = "https://qlmphykuggjqhcznbwgq.supabase.co";
 const SUPABASE_KEY = "sb_publishable_OBu1w6AOE67N84ryTy0O6g_1SlsV21N";
 
@@ -99,6 +99,7 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen flex flex-col items-center relative overflow-hidden">
 
+      {/* BG */}
       <div
         className="absolute inset-0 bg-animate"
         style={{
@@ -110,6 +111,7 @@ export default function Dashboard() {
 
       <div className="absolute inset-0 bg-black/50 backdrop-blur-md"></div>
 
+      {/* TOP */}
       <div className="absolute top-5 right-5 flex gap-3 z-50">
 
         {user.email === "bulureren76@gmail.com" && (
@@ -126,14 +128,15 @@ export default function Dashboard() {
           disabled={loggingOut}
           className="button-modern disabled:opacity-50"
         >
-          {loggingOut ? "Çıkış yapılıyor..." : "Çıkış Yap"}
+          {loggingOut ? "Çıkış yapılıyor lütfen 3 Saniye bekleyin..." : "Çıkış Yap"}
         </button>
 
       </div>
 
+      {/* TOAST */}
       {toast && (
         <div
-          className={`fixed right-5 top-24 z-50 px-6 py-4 rounded-xl border backdrop-blur-xl shadow-xl flex items-center gap-3 ${
+          className={`fixed right-5 top-24 z-50 px-6 py-4 rounded-xl border backdrop-blur-xl shadow-xl animate-slideIn flex items-center gap-3 ${
             toast.type === "success"
               ? "bg-green-500/10 border-green-400 text-green-300"
               : "bg-red-500/10 border-red-400 text-red-300"
@@ -146,8 +149,10 @@ export default function Dashboard() {
         </div>
       )}
 
+      {/* CONTENT */}
       <div className="flex flex-col items-center justify-center flex-1 z-10">
 
+        {/* HOŞGELDİN */}
         <div className="snake-card w-[420px] mb-6">
           <div className="snake-inner text-center">
             <h1 className="font-bold text-lg">
@@ -156,8 +161,10 @@ export default function Dashboard() {
           </div>
         </div>
 
+        {/* DOWNLOAD */}
         <div className="snake-card w-[420px] mb-6">
           <div className="snake-inner text-center">
+
             <h2 className="font-bold mb-2">Merlin Makro</h2>
 
             <button
@@ -170,8 +177,68 @@ export default function Dashboard() {
             >
               {license === "pro" ? "⬇ İndir" : "🔒 PRO Gerekli"}
             </button>
+
           </div>
         </div>
+
+        {/* STATUS */}
+        <div className="flex gap-4">
+
+          <div className="snake-card w-[200px]">
+            <div className="snake-inner text-center">
+              <p className="text-gray-400">Durum</p>
+              <p className="text-green-400 font-bold">Aktif</p>
+            </div>
+          </div>
+
+          <div className="snake-card w-[200px]">
+            <div className="snake-inner text-center">
+              <p className="text-gray-400">Lisans</p>
+              <p
+                className={`font-bold ${
+                  license === "pro"
+                    ? "text-yellow-400 animate-pulse"
+                    : "text-blue-400"
+                }`}
+              >
+                {license}
+              </p>
+            </div>
+          </div>
+
+        </div>
+
+        {/* EXTRA */}
+        <div className="snake-card w-[420px] mt-6">
+          <div className="snake-inner text-center">
+
+            <p className="text-gray-400 text-sm">Hesap Durumu</p>
+
+            <p className="font-bold text-lg">
+              {license === "pro" ? "👑 PRO Üye" : "Free Kullanıcı"}
+            </p>
+
+          </div>
+        </div>
+
+        {/* PAYMENT */}
+        {license !== "pro" && (
+          <div className="snake-card w-[420px] mt-6">
+            <div className="snake-inner text-center">
+
+              <button
+                className="button-modern w-full text-lg flex items-center justify-center gap-2"
+                onClick={handleCheckout}
+                disabled={loading}
+              >
+                {loading
+                  ? "Yönlendiriliyor..."
+                  : "💳 PRO Satın Al"}
+              </button>
+
+            </div>
+          </div>
+        )}
 
       </div>
     </div>
