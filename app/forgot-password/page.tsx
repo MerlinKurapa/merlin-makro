@@ -1,16 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { createClient } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
-
 export default function ForgotPassword() {
   const router = useRouter();
+
+  const [supabase, setSupabase] = useState<any>(null);
 
   const [email, setEmail] = useState("");
   const [toast, setToast] = useState<any>(null);
@@ -21,7 +18,19 @@ export default function ForgotPassword() {
     setTimeout(() => setToast(null), 4000);
   };
 
+  // 🔥 SUPABASE CLIENT (FIX)
+  useEffect(() => {
+    const supabaseClient = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    );
+
+    setSupabase(supabaseClient);
+  }, []);
+
   const handleReset = async () => {
+    if (!supabase) return;
+
     if (!email) return showToast("E-posta gir", "error");
 
     setLoading(true);
@@ -46,14 +55,14 @@ export default function ForgotPassword() {
       <div className="mesh-bg"></div>
       <div className="absolute inset-0 bg-black/30"></div>
 
-      {/* 🔔 TOAST */}
+      {/* TOAST */}
       {toast && (
         <div className={`toast ${toast.type}`}>
           {toast.msg}
         </div>
       )}
 
-      {/* 🔥 ÜSTTE HOME BUTONU */}
+      {/* HOME BUTTON */}
       <div className="absolute top-5 left-5 z-50">
         <button
           onClick={() => router.push("/")}
@@ -63,7 +72,7 @@ export default function ForgotPassword() {
         </button>
       </div>
 
-      {/* 💎 CARD */}
+      {/* CARD */}
       <div className="snake-card w-[380px] z-10">
         <div className="snake-inner text-center">
 
@@ -85,7 +94,6 @@ export default function ForgotPassword() {
             {loading ? "Gönderiliyor..." : "Mail Gönder"}
           </button>
 
-          {/* 🔥 ALT NAV */}
           <div className="mt-5 text-sm text-gray-400">
             Giriş ekranına dönmek ister misin?
           </div>
