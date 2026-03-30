@@ -4,6 +4,10 @@ import { useEffect, useState } from "react";
 import { createClient } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
 
+// 🔥 HARDCODED (ENV YOK)
+const SUPABASE_URL = "https://qlmphykuggjqhcznbwgq.supabase.co";
+const SUPABASE_KEY = "sb_publishable_OBu1w6AOE67N84ryTy0O6g_1SlsV21N";
+
 export default function Dashboard() {
   const router = useRouter();
 
@@ -20,11 +24,7 @@ export default function Dashboard() {
   };
 
   useEffect(() => {
-    const supabaseClient = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-    );
-
+    const supabaseClient = createClient(SUPABASE_URL, SUPABASE_KEY);
     setSupabase(supabaseClient);
 
     const getUser = async () => {
@@ -81,18 +81,17 @@ export default function Dashboard() {
     }
   };
 
-  // 🔥 LOGOUT
   const handleLogout = async () => {
     if (loggingOut || !supabase) return;
 
     setLoggingOut(true);
 
-    showToast("Çıkış yapılıyor, lütfen 3 saniye bekleyin...", "success");
+    showToast("Çıkış yapılıyor...", "success");
 
     setTimeout(async () => {
       await supabase.auth.signOut();
       router.replace("/");
-    }, 3000);
+    }, 2000);
   };
 
   if (!user) return null;
@@ -100,7 +99,6 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen flex flex-col items-center relative overflow-hidden">
 
-      {/* BG */}
       <div
         className="absolute inset-0 bg-animate"
         style={{
@@ -112,7 +110,6 @@ export default function Dashboard() {
 
       <div className="absolute inset-0 bg-black/50 backdrop-blur-md"></div>
 
-      {/* TOP */}
       <div className="absolute top-5 right-5 flex gap-3 z-50">
 
         {user.email === "bulureren76@gmail.com" && (
@@ -134,10 +131,9 @@ export default function Dashboard() {
 
       </div>
 
-      {/* TOAST */}
       {toast && (
         <div
-          className={`fixed right-5 top-24 z-50 px-6 py-4 rounded-xl border backdrop-blur-xl shadow-xl animate-slideIn flex items-center gap-3 ${
+          className={`fixed right-5 top-24 z-50 px-6 py-4 rounded-xl border backdrop-blur-xl shadow-xl flex items-center gap-3 ${
             toast.type === "success"
               ? "bg-green-500/10 border-green-400 text-green-300"
               : "bg-red-500/10 border-red-400 text-red-300"
@@ -150,7 +146,6 @@ export default function Dashboard() {
         </div>
       )}
 
-      {/* CONTENT */}
       <div className="flex flex-col items-center justify-center flex-1 z-10">
 
         <div className="snake-card w-[420px] mb-6">
