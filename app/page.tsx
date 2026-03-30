@@ -1,13 +1,13 @@
 export default function Home() {
   return (
-    <div className="rgb-bg min-h-screen flex flex-col items-center px-6 relative overflow-hidden">
+    <div className="rgb-bg min-h-screen flex flex-col items-center px-4 relative">
 
       {/* BG */}
       <div className="mesh-bg"></div>
       <div className="absolute inset-0 bg-black/20 z-[1]"></div>
 
       {/* HERO */}
-      <div className="flex w-full max-w-[1600px] justify-between items-center mt-24 z-10">
+      <div className="flex w-full max-w-[1600px] flex-col lg:flex-row justify-between items-center mt-16 lg:mt-24 z-10 gap-10">
 
         {/* LEFT */}
         <div className="hidden lg:flex flex-col gap-8 w-[320px] ml-6">
@@ -39,14 +39,13 @@ export default function Home() {
         </div>
 
         {/* CENTER */}
-        <div className="flex flex-col items-center gap-8 mx-12">
+        <div className="flex flex-col items-center gap-6 lg:gap-8 w-full lg:w-auto">
 
-          <div className="snake-card w-[950px] max-w-full">
+          <div className="snake-card w-[95%] max-w-[950px]">
             <div className="snake-inner text-center">
 
-              {/* 🔥 PREMIUM HEADLINE (INTER OPTIMIZED) */}
               <h1
-                className="text-5xl leading-tight text-center text-shine"
+                className="text-3xl sm:text-4xl lg:text-5xl leading-tight text-center text-shine"
                 style={{
                   fontFamily: "var(--font-inter)",
                   fontWeight: 600,
@@ -58,7 +57,6 @@ export default function Home() {
               >
                 Oyunların Tanıdığı Sınırlardan Kurtul
 
-                {/* ⚔️ KILIÇ */}
                 <span className="block mt-4 relative w-full h-[3px] overflow-hidden">
 
                   <span
@@ -69,7 +67,6 @@ export default function Home() {
                     }}
                   ></span>
 
-                  {/* ✨ SHINE */}
                   <span className="shine-effect"></span>
 
                   <span
@@ -92,26 +89,26 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="snake-card w-[550px]">
+          <div className="snake-card w-[95%] max-w-[550px]">
             <div className="snake-inner text-center">
-              <p className="text-gray-300 text-lg">
+              <p className="text-gray-300 text-base sm:text-lg">
                 Tek tıkla otomasyon. Hızlı, güçlü ve profesyonel makro çözümü.
               </p>
             </div>
           </div>
 
-          <div className="snake-card w-[420px]">
+          <div className="snake-card w-[95%] max-w-[420px]">
             <div className="snake-inner flex flex-col items-center gap-4">
 
               <p className="text-gray-400 text-sm">
                 Hemen başlayın
               </p>
 
-              <div className="flex gap-4">
-                <a href="/register" className="button-modern">
+              <div className="flex flex-col sm:flex-row gap-4 w-full justify-center">
+                <a href="/register" className="button-modern w-full sm:w-auto text-center">
                   Kayıt Ol
                 </a>
-                <a href="/login" className="button-outline">
+                <a href="/login" className="button-outline w-full sm:w-auto text-center">
                   Giriş Yap
                 </a>
               </div>
@@ -155,9 +152,9 @@ export default function Home() {
       </div>
 
       {/* TRUST */}
-      <div className="mt-24 flex flex-col items-center gap-6 z-10">
+      <div className="mt-16 lg:mt-24 flex flex-col items-center gap-6 z-10 w-full px-4">
 
-        <div className="snake-card w-[600px]">
+        <div className="snake-card w-[95%] max-w-[600px]">
           <div className="snake-inner text-center">
             <h3 className="text-lg font-semibold text-cyan-400 mb-3">
               Güvenli Ödeme Sistemi
@@ -168,26 +165,26 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="snake-card w-[500px]">
+        <div className="snake-card w-[95%] max-w-[500px]">
           <div className="snake-inner text-center">
 
             <h3 className="text-md font-semibold mb-4 text-white">
               Desteklenen Ödeme Yöntemleri
             </h3>
 
-            <div className="flex justify-center gap-10 items-center">
+            <div className="flex justify-center gap-6 sm:gap-10 items-center flex-wrap">
 
               <a href="https://www.paytr.com" target="_blank">
                 <img
                   src="/paytr.png"
-                  className="h-12 opacity-80 hover:opacity-100 hover:scale-110 transition duration-300"
+                  className="h-10 sm:h-12 opacity-80 hover:opacity-100 hover:scale-110 transition duration-300"
                 />
               </a>
 
               <a href="https://www.visa.com" target="_blank">
                 <img
                   src="/visa.png"
-                  className="h-12 opacity-80 hover:opacity-100 hover:scale-110 transition duration-300"
+                  className="h-10 sm:h-12 opacity-80 hover:opacity-100 hover:scale-110 transition duration-300"
                 />
               </a>
 
@@ -199,7 +196,7 @@ export default function Home() {
       </div>
 
       {/* FOOTER */}
-      <div className="mt-20 w-full max-w-[1200px] border-t border-white/10 pt-8 pb-10 z-10">
+      <div className="mt-16 lg:mt-20 w-full max-w-[1200px] border-t border-white/10 pt-8 pb-10 z-10 px-4">
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-sm text-gray-400">
 
