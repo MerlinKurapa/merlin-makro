@@ -1,9 +1,19 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import ReCAPTCHA from "react-google-recaptcha";
+import { useState, useEffect } from "react";
+import dynamic from "next/dynamic";
 import { createClient } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
+
+const ReCAPTCHA = dynamic(
+  () => import("react-google-recaptcha"),
+  { ssr: false }
+);
+
+// 🔥 HARDCODED
+const SUPABASE_URL = "https://qlmphykuggjqhcznbwgq.supabase.co";
+const SUPABASE_KEY = "sb_publishable_OBu1w6AOE67N84ryTy0O6g_1SlsV21N";
+const RECAPTCHA_KEY = "6LfHGJssAAAAAC2c28qrGShwZMk378jaHFNG787S";
 
 export default function Register() {
   const router = useRouter();
@@ -21,21 +31,9 @@ export default function Register() {
     setTimeout(() => setToast(null), 4000);
   };
 
-  // 🔥 SUPABASE INIT + ADMIN ERROR
   useEffect(() => {
-    const supabaseClient = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-    );
-
+    const supabaseClient = createClient(SUPABASE_URL, SUPABASE_KEY);
     setSupabase(supabaseClient);
-
-    const error = localStorage.getItem("admin_error");
-
-    if (error) {
-      showToast(error, "error");
-      localStorage.removeItem("admin_error");
-    }
   }, []);
 
   const handleRegister = async () => {
@@ -70,90 +68,61 @@ export default function Register() {
   };
 
   return (
-    <div className="rgb-bg min-h-screen flex items-center justify-center relative overflow-hidden">
+    <div className="rgb-bg min-h-screen flex items-center justify-center">
 
-      {/* BG */}
-      <div className="mesh-bg"></div>
-      <div className="absolute inset-0 bg-black/30"></div>
-
-      {/* ANA SAYFA */}
-      <div className="absolute top-5 left-5 z-50">
-        <button
-          onClick={() => router.push("/")}
-          className="button-outline"
-        >
-         ← Ana Sayfa
-        </button>
-      </div>
-
-      {/* TOAST */}
       {toast && (
-        <div
-          className={`fixed right-5 top-20 z-50 px-6 py-4 rounded-xl border backdrop-blur-xl shadow-2xl animate-slideIn flex items-center gap-3 ${
-            toast.type === "success"
-              ? "bg-green-500/10 border-green-400 text-green-300"
-              : "bg-red-500/10 border-red-400 text-red-300"
-          }`}
-        >
-          <span className="text-lg">
-            {toast.type === "success" ? "✔" : "⚠"}
-          </span>
-          <span>{toast.msg}</span>
+        <div className={`fixed right-5 top-24 z-50 px-6 py-4 rounded-xl ${
+          toast.type === "success"
+            ? "bg-green-500/10 text-green-300"
+            : "bg-red-500/10 text-red-300"
+        }`}>
+          {toast.msg}
         </div>
       )}
 
-      {/* CARD */}
-      <div className="snake-card w-[380px] z-10">
+      <div className="snake-card w-[380px]">
         <div className="snake-inner text-center">
 
           <h2 className="text-xl font-bold mb-6">
             Kayıt Ol
           </h2>
 
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              handleRegister();
-            }}
+          <input
+            className="input"
+            placeholder="E-posta"
+            onChange={(e) => setEmail(e.target.value)}
+          />
+
+          <input
+            className="input"
+            type="password"
+            placeholder="Şifre"
+            onChange={(e) => setPassword(e.target.value)}
+          />
+
+          <input
+            className="input"
+            type="password"
+            placeholder="Şifre (Tekrar)"
+            onChange={(e) => setPassword2(e.target.value)}
+          />
+
+          {/* 🔥 CAPTCHA */}
+          <div className="my-4 flex justify-center">
+            <ReCAPTCHA
+              sitekey={RECAPTCHA_KEY}
+              onChange={(val) => setCaptcha(val)}
+            />
+          </div>
+
+          <button
+            onClick={handleRegister}
+            className="button-modern w-full"
           >
+            Kayıt Ol
+          </button>
 
-            <input
-              className="input"
-              placeholder="E-posta"
-              onChange={(e) => setEmail(e.target.value)}
-            />
-
-            <input
-              className="input"
-              type="password"
-              placeholder="Şifre"
-              onChange={(e) => setPassword(e.target.value)}
-            />
-
-            <input
-              className="input"
-              type="password"
-              placeholder="Şifre (Tekrar)"
-              onChange={(e) => setPassword2(e.target.value)}
-            />
-
-            <div className="my-4 flex justify-center">
-              <ReCAPTCHA
-                sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!}
-                onChange={(val) => setCaptcha(val)}
-              />
-            </div>
-
-            <button
-              type="submit"
-              className="button-modern w-full"
-            >
-              Kayıt Ol
-            </button>
-
-          </form>
-
-          <div className="mt-6">
+          <div className="mt-4">
             <p className="text-gray-400 text-sm">
               Zaten hesabın var mı?
             </p>
