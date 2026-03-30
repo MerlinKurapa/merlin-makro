@@ -86,7 +86,7 @@ export default function Dashboard() {
 
     setLoggingOut(true);
 
-    showToast("Çıkış yapılıyor...", "success");
+    showToast("Çıkış yapılıyor lütfen 3 Saniye bekleyin...", "success");
 
     setTimeout(async () => {
       await supabase.auth.signOut();
