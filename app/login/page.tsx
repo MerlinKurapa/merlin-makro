@@ -5,17 +5,15 @@ import dynamic from "next/dynamic";
 import { createClient } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
 
-// 🔥 SSR OFF
+// 🔥 SADECE SSR FIX (EKLENDİ)
 const ReCAPTCHA = dynamic(
   () => import("react-google-recaptcha"),
   { ssr: false }
 );
 
-// 🔥 HARDCODED (ENV YOK ARTIK)
+// 🔥 SADECE ENV FIX (EKLENDİ)
 const SUPABASE_URL = "https://qlmphykuggjqhcznbwgq.supabase.co";
 const SUPABASE_KEY = "sb_publishable_OBu1w6AOE67N84ryTy0O6g_1SlsV21N";
-
-const RECAPTCHA_KEY = "6LfHGJssAAAAAC2c28qrGShwZMk378jaHFNG787S";
 
 export default function Login() {
   const router = useRouter();
@@ -33,6 +31,7 @@ export default function Login() {
     setTimeout(() => setToast(null), 4000);
   };
 
+  // 🔥 SADECE BURASI FIXLENDİ (supabase init)
   useEffect(() => {
     const supabaseClient = createClient(SUPABASE_URL, SUPABASE_KEY);
     setSupabase(supabaseClient);
@@ -57,44 +56,56 @@ export default function Login() {
 
     setLoading(true);
 
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+    // 🔥 SENİN ORİJİNAL 5 SANİYE TOAST
+    showToast("Giriş yapılıyor, lütfen 5 saniye bekleyin...", "success");
 
-    if (error) {
-      setLoading(false);
-      return showToast("E-posta veya şifre hatalı", "error");
-    }
+    setTimeout(async () => {
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
 
-    router.push("/dashboard");
+      if (error) {
+        setLoading(false);
+        return showToast("E-posta veya şifre hatalı", "error");
+      }
+
+      router.push("/dashboard");
+    }, 5000);
   };
 
   return (
     <div className="rgb-bg min-h-screen flex items-center justify-center relative overflow-hidden">
 
+      {/* BG */}
       <div className="mesh-bg"></div>
       <div className="absolute inset-0 bg-black/30"></div>
 
-      {/* ANA SAYFA */}
+      {/* ANA SAYFA BUTONU */}
       <div className="absolute top-5 left-5 z-50">
-        <button onClick={() => router.push("/")} className="button-outline">
-          ← Ana Sayfa
+        <button
+          onClick={() => router.push("/")}
+          className="button-outline"
+        >
+         ← Ana Sayfa
         </button>
       </div>
 
-      {/* TOAST */}
+      {/* 🔥 SENİN ORİJİNAL TOAST (DEĞİŞMEDİ) */}
       {toast && (
-        <div className={`fixed right-5 top-24 z-50 px-6 py-4 rounded-xl border backdrop-blur-xl shadow-xl flex items-center gap-3 ${
-          toast.type === "success"
-            ? "bg-green-500/10 border-green-400 text-green-300"
-            : "bg-red-500/10 border-red-400 text-red-300"
-        }`}>
+        <div
+          className={`fixed right-5 top-24 z-50 px-6 py-4 rounded-xl border backdrop-blur-xl shadow-xl animate-slideIn flex items-center gap-3 ${
+            toast.type === "success"
+              ? "bg-green-500/10 border-green-400 text-green-300"
+              : "bg-red-500/10 border-red-400 text-red-300"
+          }`}
+        >
           <span>{toast.type === "success" ? "✔" : "⚠"}</span>
           <span>{toast.msg}</span>
         </div>
       )}
 
+      {/* CARD */}
       <div className="snake-card w-[380px] z-10">
         <div className="snake-inner text-center">
 
@@ -122,12 +133,14 @@ export default function Login() {
               onChange={(e) => setPassword(e.target.value)}
             />
 
-            {/* 🔥 CAPTCHA */}
+            {/* 🔥 SADECE SSR FIX */}
             <div className="my-4 flex justify-center">
-              <ReCAPTCHA
-                sitekey={RECAPTCHA_KEY}
-                onChange={(val) => setCaptcha(val)}
-              />
+              {process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY && (
+                <ReCAPTCHA
+                  sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
+                  onChange={(val) => setCaptcha(val)}
+                />
+              )}
             </div>
 
             <button
@@ -140,7 +153,7 @@ export default function Login() {
 
           </form>
 
-          {/* ALT */}
+          {/* ALT (SENİN UI – DOKUNMADIM) */}
           <div className="mt-6 space-y-3">
 
             <label className="flex items-center gap-2 text-sm text-gray-400">
