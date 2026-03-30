@@ -4,6 +4,10 @@ import { useState, useEffect } from "react";
 import { createClient } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
 
+// 🔥 HARDCODED
+const SUPABASE_URL = "https://qlmphykuggjqhcznbwgq.supabase.co";
+const SUPABASE_KEY = "sb_publishable_OBu1w6AOE67N84ryTy0O6g_1SlsV21N";
+
 export default function UpdatePassword() {
   const router = useRouter();
 
@@ -20,13 +24,8 @@ export default function UpdatePassword() {
     setTimeout(() => setToast(null), 4000);
   };
 
-  // 🔥 SUPABASE INIT + SESSION CHECK
   useEffect(() => {
-    const supabaseClient = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-    );
-
+    const supabaseClient = createClient(SUPABASE_URL, SUPABASE_KEY);
     setSupabase(supabaseClient);
 
     const checkSession = async () => {
@@ -86,7 +85,11 @@ export default function UpdatePassword() {
       <div className="absolute inset-0 bg-black/30"></div>
 
       {toast && (
-        <div className={`toast ${toast.type}`}>
+        <div className={`fixed right-5 top-24 z-50 px-6 py-4 rounded-xl ${
+          toast.type === "success"
+            ? "bg-green-500/10 text-green-300"
+            : "bg-red-500/10 text-red-300"
+        }`}>
           {toast.msg}
         </div>
       )}
