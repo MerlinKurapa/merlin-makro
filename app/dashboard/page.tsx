@@ -4,14 +4,10 @@ import { useEffect, useState } from "react";
 import { createClient } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
-
 export default function Dashboard() {
   const router = useRouter();
 
+  const [supabase, setSupabase] = useState<any>(null);
   const [user, setUser] = useState<any>(null);
   const [license, setLicense] = useState("free");
   const [toast, setToast] = useState<any>(null);
@@ -24,8 +20,15 @@ export default function Dashboard() {
   };
 
   useEffect(() => {
+    const supabaseClient = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    );
+
+    setSupabase(supabaseClient);
+
     const getUser = async () => {
-      const { data } = await supabase.auth.getUser();
+      const { data } = await supabaseClient.auth.getUser();
 
       if (!data.user) {
         router.push("/login");
@@ -34,7 +37,7 @@ export default function Dashboard() {
 
       setUser(data.user);
 
-      const { data: profile } = await supabase
+      const { data: profile } = await supabaseClient
         .from("profiles")
         .select("license")
         .eq("id", data.user.id)
@@ -78,9 +81,9 @@ export default function Dashboard() {
     }
   };
 
-  // 🔥 YENİ LOGOUT
+  // 🔥 LOGOUT
   const handleLogout = async () => {
-    if (loggingOut) return;
+    if (loggingOut || !supabase) return;
 
     setLoggingOut(true);
 
@@ -131,7 +134,7 @@ export default function Dashboard() {
 
       </div>
 
-      {/* 🔥 TOAST */}
+      {/* TOAST */}
       {toast && (
         <div
           className={`fixed right-5 top-24 z-50 px-6 py-4 rounded-xl border backdrop-blur-xl shadow-xl animate-slideIn flex items-center gap-3 ${
@@ -150,7 +153,6 @@ export default function Dashboard() {
       {/* CONTENT */}
       <div className="flex flex-col items-center justify-center flex-1 z-10">
 
-        {/* HOŞGELDİN */}
         <div className="snake-card w-[420px] mb-6">
           <div className="snake-inner text-center">
             <h1 className="font-bold text-lg">
@@ -159,10 +161,8 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* DOWNLOAD */}
         <div className="snake-card w-[420px] mb-6">
           <div className="snake-inner text-center">
-
             <h2 className="font-bold mb-2">Merlin Makro</h2>
 
             <button
@@ -175,68 +175,8 @@ export default function Dashboard() {
             >
               {license === "pro" ? "⬇ İndir" : "🔒 PRO Gerekli"}
             </button>
-
           </div>
         </div>
-
-        {/* STATUS */}
-        <div className="flex gap-4">
-
-          <div className="snake-card w-[200px]">
-            <div className="snake-inner text-center">
-              <p className="text-gray-400">Durum</p>
-              <p className="text-green-400 font-bold">Aktif</p>
-            </div>
-          </div>
-
-          <div className="snake-card w-[200px]">
-            <div className="snake-inner text-center">
-              <p className="text-gray-400">Lisans</p>
-              <p
-                className={`font-bold ${
-                  license === "pro"
-                    ? "text-yellow-400 animate-pulse"
-                    : "text-blue-400"
-                }`}
-              >
-                {license}
-              </p>
-            </div>
-          </div>
-
-        </div>
-
-        {/* EXTRA */}
-        <div className="snake-card w-[420px] mt-6">
-          <div className="snake-inner text-center">
-
-            <p className="text-gray-400 text-sm">Hesap Durumu</p>
-
-            <p className="font-bold text-lg">
-              {license === "pro" ? "👑 PRO Üye" : "Free Kullanıcı"}
-            </p>
-
-          </div>
-        </div>
-
-        {/* PAYMENT */}
-        {license !== "pro" && (
-          <div className="snake-card w-[420px] mt-6">
-            <div className="snake-inner text-center">
-
-              <button
-                className="button-modern w-full text-lg flex items-center justify-center gap-2"
-                onClick={handleCheckout}
-                disabled={loading}
-              >
-                {loading
-                  ? "Yönlendiriliyor..."
-                  : "💳 PRO Satın Al"}
-              </button>
-
-            </div>
-          </div>
-        )}
 
       </div>
     </div>
