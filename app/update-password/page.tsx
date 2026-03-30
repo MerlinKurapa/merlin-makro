@@ -4,13 +4,10 @@ import { useState, useEffect } from "react";
 import { createClient } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
-
 export default function UpdatePassword() {
   const router = useRouter();
+
+  const [supabase, setSupabase] = useState<any>(null);
 
   const [password, setPassword] = useState("");
   const [password2, setPassword2] = useState("");
@@ -23,10 +20,17 @@ export default function UpdatePassword() {
     setTimeout(() => setToast(null), 4000);
   };
 
-  // 🔥 KRİTİK: SESSION YAKALA
+  // 🔥 SUPABASE INIT + SESSION CHECK
   useEffect(() => {
+    const supabaseClient = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    );
+
+    setSupabase(supabaseClient);
+
     const checkSession = async () => {
-      const { data } = await supabase.auth.getSession();
+      const { data } = await supabaseClient.auth.getSession();
 
       if (!data.session) {
         showToast("Geçersiz veya süresi dolmuş link", "error");
@@ -45,6 +49,8 @@ export default function UpdatePassword() {
   }, []);
 
   const handleUpdate = async () => {
+    if (!supabase) return;
+
     if (!password || !password2) {
       return showToast("Alanları doldur", "error");
     }
