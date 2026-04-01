@@ -35,7 +35,7 @@ export default function ForgotPassword() {
     setLoading(true);
 
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: "https://merlinmacro.xyz/update-password",
+      redirectTo: "https://www.merlinmacro.xyz/update-password",
     });
 
     if (error) {
