@@ -46,6 +46,7 @@ export default function UpdatePassword() {
     const checkSession = async () => {
       const { data } = await supabaseClient.auth.getSession();
 
+
       if (!data.session) {
         showToast("Geçersiz veya süresi dolmuş link", "error");
 
