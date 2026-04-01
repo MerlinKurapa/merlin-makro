@@ -28,6 +28,21 @@ export default function UpdatePassword() {
     const supabaseClient = createClient(SUPABASE_URL, SUPABASE_KEY);
     setSupabase(supabaseClient);
 
+    // 🔥 EKLENEN KISIM (EN KRİTİK)
+    const hash = window.location.hash;
+    if (hash) {
+      const params = new URLSearchParams(hash.substring(1));
+      const access_token = params.get("access_token");
+      const refresh_token = params.get("refresh_token");
+
+      if (access_token && refresh_token) {
+        supabaseClient.auth.setSession({
+          access_token,
+          refresh_token,
+        });
+      }
+    }
+
     const checkSession = async () => {
       const { data } = await supabaseClient.auth.getSession();
 
