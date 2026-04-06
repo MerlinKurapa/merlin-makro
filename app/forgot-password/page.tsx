@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { createClient } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
-
+ 
 // 🔥 HARDCODED (ENV YOK)
 const SUPABASE_URL = "https://qlmphykuggjqhcznbwgq.supabase.co";
 const SUPABASE_KEY = "sb_publishable_OBu1w6AOE67N84ryTy0O6g_1SlsV21N";
