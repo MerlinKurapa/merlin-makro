@@ -59,28 +59,31 @@ export default function Dashboard() {
     window.location.href = "https://drive.google.com/uc?export=download&id=1PF_8_pIha8QcQX-hbgVBw9cDsEYJRUNL";
   };
 
-  const handleCheckout = async () => {
-    try {
-      setLoading(true);
+ const handleCheckout = async () => {
+  try {
+    setLoading(true);
 
-      const res = await fetch("/api/checkout", {
-        method: "POST",
-        body: JSON.stringify({ email: user.email }),
-      });
+    const res = await fetch("/api/paytr", {
+      method: "POST",
+      body: JSON.stringify({
+        email: user.email,
+      }),
+    });
 
-      const data = await res.json();
+    const data = await res.json();
 
-      if (data.url) {
-        window.location.href = data.url;
-      } else {
-        showToast("Stripe hatası", "error");
-      }
-    } catch {
-      showToast("Bir hata oluştu", "error");
-    } finally {
-      setLoading(false);
+    if (data.token) {
+      window.location.href = `https://www.paytr.com/odeme/guvenli/${data.token}`;
+    } else {
+      showToast("PAYTR hatası", "error");
     }
-  };
+
+  } catch {
+    showToast("Bir hata oluştu", "error");
+  } finally {
+    setLoading(false);
+  }
+};
 
   const handleLogout = async () => {
     if (loggingOut || !supabase) return;
