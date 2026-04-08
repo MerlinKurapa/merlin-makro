@@ -72,8 +72,8 @@ export default function Dashboard() {
 
     const data = await res.json();
 
-    if (data.token) {
-      window.location.href = `https://www.paytr.com/odeme/guvenli/${data.token}`;
+    if (data.url) {
+      window.location.href = data url;
     } else {
       showToast("PAYTR hatası", "error");
     }
