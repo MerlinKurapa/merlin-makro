@@ -9,7 +9,7 @@ export async function POST(req: Request) {
     const merchant_key = "o5oXMbcN9b9qjcNa";
     const merchant_salt = "kr8XT9fUY3LrFArh";
 
-    const payment_amount = "1000"; // 10 TL (1000 = 10.00 TL)
+    const payment_amount = "1000"; // 10 TL
     const merchant_oid = "ORDER_" + Date.now();
 
     const user_ip =
@@ -23,6 +23,13 @@ export async function POST(req: Request) {
       JSON.stringify([["Merlin PRO", "10.00", 1]])
     ).toString("base64");
 
+    // 🔥 ZORUNLU PARAMETRELER
+    const no_installment = "0";
+    const max_installment = "0";
+    const currency = "TL";
+    const test_mode = "1";
+
+    // 🔥 DOĞRU HASH
     const hash_str =
       merchant_id +
       user_ip +
@@ -30,16 +37,17 @@ export async function POST(req: Request) {
       email +
       payment_amount +
       user_basket +
-      user_name +
-      user_address +
-      user_phone;
+      no_installment +
+      max_installment +
+      currency +
+      test_mode;
 
     const token = crypto
       .createHmac("sha256", merchant_key)
       .update(hash_str + merchant_salt)
       .digest("base64");
 
-    // 🔥 PAYTR SAYFA URL
+    // 🔥 PAYTR URL
     const paytr_url = `https://www.paytr.com/odeme/guvenli/${token}`;
 
     return NextResponse.json({
