@@ -73,7 +73,7 @@ export default function Dashboard() {
     const data = await res.json();
 
     if (data.url) {
-      window.location.href = data url;
+      window.location.href = data.url;
     } else {
       showToast("PAYTR hatası", "error");
     }
